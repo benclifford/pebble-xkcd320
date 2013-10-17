@@ -40,11 +40,15 @@ void handle_init(AppContextRef ctx) {
 
 char msg[128];
 
+int offset = 0; // twiddle this for realignment with diagram
 
 void handle_tick(AppContextRef ctx, PebbleTickEvent *event) {
   time_t s;
   ctr++;
   time(&s);
+
+
+  s+= offset; 
 
   // xkcd 320 times
   // theres an offset, which is how the xkcd week lines up with the
@@ -57,9 +61,8 @@ void handle_tick(AppContextRef ctx, PebbleTickEvent *event) {
   int xkcd320_day    =  (s / 60  / 60  / 28) % 6;
   int xkcd320_hour   =  (s / 60  / 60) % 28;
   int xkcd320_minute =  (s / 60) % 60;
-  int xkcd320_second =   s % 60;
 
-  snprintf(msg, 128, "ctr=%d\ns=%ld\nweek=%d\nday=%d (0-6)\nhour=%d (0-27)\nmin=%d\nsec=%d", ctr, s, xkcd320_wn, xkcd320_day, xkcd320_hour, xkcd320_minute, xkcd320_second);
+  snprintf(msg, 128, "xkcd=%2.2d:%2.2d\n\nctr=%d\ns=%ld\nday %d of\nweek=%d\n", xkcd320_hour, xkcd320_minute, ctr, s, xkcd320_day, xkcd320_wn);
 
 
   text_layer_set_text(&text_layer, msg);
