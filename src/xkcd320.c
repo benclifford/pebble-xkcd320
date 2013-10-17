@@ -13,7 +13,7 @@ PBL_APP_INFO(MY_UUID,
 Window window;
 TextLayer text_layer;
 
-int x = 0;
+int ctr = 0;
 
 void handle_init(AppContextRef ctx) {
 
@@ -22,18 +22,28 @@ void handle_init(AppContextRef ctx) {
 
   text_layer_init(&text_layer, GRect(0,0,144, 168));
   text_layer_set_text_alignment(&text_layer, GTextAlignmentLeft);
-  text_layer_set_text(&text_layer, "Coming soon!");
+  text_layer_set_text(&text_layer, "Please Wait...");
   text_layer_set_font(&text_layer, fonts_get_system_font(FONT_KEY_ROBOTO_CONDENSED_21));
   layer_add_child(&window.layer, &text_layer.layer);
 
 
 }
 
+
+// 28h time of day events:
+
+// pre-bed at 27:30 - buzz alarm
+// bed at 0h = 28h
+// awake at 9h - need buzz alarm for that
+
+// how to meaningfully display 24h 
+
 char msg[128];
+
 
 void handle_tick(AppContextRef ctx, PebbleTickEvent *event) {
   time_t s;
-  x++;
+  ctr++;
   time(&s);
 
   // xkcd 320 times
@@ -49,7 +59,7 @@ void handle_tick(AppContextRef ctx, PebbleTickEvent *event) {
   int xkcd320_minute =  (s / 60) % 60;
   int xkcd320_second =   s % 60;
 
-  snprintf(msg, 128, "x=%d\ns=%ld\nweek=%d\nday=%d (0-6)\nhour=%d (0-27)\nmin=%d\nsec=%d", x, s, xkcd320_wn, xkcd320_day, xkcd320_hour, xkcd320_minute, xkcd320_second);
+  snprintf(msg, 128, "ctr=%d\ns=%ld\nweek=%d\nday=%d (0-6)\nhour=%d (0-27)\nmin=%d\nsec=%d", ctr, s, xkcd320_wn, xkcd320_day, xkcd320_hour, xkcd320_minute, xkcd320_second);
 
 
   text_layer_set_text(&text_layer, msg);
