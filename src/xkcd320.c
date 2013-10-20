@@ -11,6 +11,7 @@ PBL_APP_INFO(MY_UUID,
              APP_INFO_WATCH_FACE);
 
 Window window;
+TextLayer big_text_layer;
 TextLayer text_layer;
 InverterLayer inverter_layer;
 
@@ -21,15 +22,20 @@ void handle_init(AppContextRef ctx) {
   window_init(&window, "Window Name");
   window_stack_push(&window, true /* Animated */);
 
-  text_layer_init(&text_layer, GRect(0,0,144, 168));
+  text_layer_init(&big_text_layer, GRect(0,0,144, 84));
+  text_layer_set_text_alignment(&big_text_layer, GTextAlignmentCenter);
+  text_layer_set_text(&big_text_layer, "BIG TEXT LAYER");
+  text_layer_set_font(&big_text_layer, fonts_get_system_font(FONT_KEY_ROBOTO_BOLD_SUBSET_49));
+  layer_add_child(&window.layer, &big_text_layer.layer);
+
+  text_layer_init(&text_layer, GRect(0,84,144, 84));
   text_layer_set_text_alignment(&text_layer, GTextAlignmentLeft);
-  text_layer_set_text(&text_layer, "Please Wait...");
+  text_layer_set_text(&text_layer, "INFO LAYER");
   text_layer_set_font(&text_layer, fonts_get_system_font(FONT_KEY_ROBOTO_CONDENSED_21));
   layer_add_child(&window.layer, &text_layer.layer);
 
   inverter_layer_init(&inverter_layer, GRect(0,0,144,168));
   layer_add_child(&window.layer, &inverter_layer.layer);
-
 }
 
 
@@ -41,6 +47,7 @@ void handle_init(AppContextRef ctx) {
 
 // how to meaningfully display 24h 
 
+char big_msg[128];
 char msg[128];
 
 int offset = 0; // twiddle this for realignment with diagram
@@ -65,9 +72,11 @@ void handle_tick(AppContextRef ctx, PebbleTickEvent *event) {
   int xkcd320_hour   =  (s / 60  / 60) % 28;
   int xkcd320_minute =  (s / 60) % 60;
 
-  snprintf(msg, 128, "xkcd=%2.2d:%2.2d\n\nctr=%d\ns=%ld\nday %d of\nweek=%d\n", xkcd320_hour, xkcd320_minute, ctr, s, xkcd320_day, xkcd320_wn);
+  snprintf(big_msg, 128, "%2.2d:%2.2d", xkcd320_hour, xkcd320_minute);
 
+  snprintf(msg, 128, "day %d\nctr=%d\ns=%ld\nweek=%d\n", xkcd320_day, ctr, s, xkcd320_wn);
 
+  text_layer_set_text(&big_text_layer, big_msg);
   text_layer_set_text(&text_layer, msg);
 }
 
