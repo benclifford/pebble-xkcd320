@@ -5,7 +5,7 @@
 
 #define MY_UUID { 0x58, 0xC8, 0x47, 0x04, 0x3F, 0x7A, 0x47, 0x68, 0x85, 0xF2, 0x81, 0x48, 0xE0, 0x18, 0xC6, 0x01 }
 PBL_APP_INFO(MY_UUID,
-             "XKCD320", "CQX",
+             "xkcd 320", "CQX",
              1, 0, /* App version */
              DEFAULT_MENU_ICON,
              APP_INFO_WATCH_FACE);
@@ -74,7 +74,7 @@ void handle_tick(AppContextRef ctx, PebbleTickEvent *event) {
 
   snprintf(big_msg, 128, "%2.2d:%2.2d", xkcd320_hour, xkcd320_minute);
 
-  snprintf(msg, 128, "day %d\nctr=%d\ns=%ld\nweek=%d\n", xkcd320_day, ctr, s, xkcd320_wn);
+  snprintf(msg, 128, "XKCD day %d\nctr=%d\ns=%ld\nweek=%d\n", xkcd320_day, ctr, s, xkcd320_wn);
 
   text_layer_set_text(&big_text_layer, big_msg);
   text_layer_set_text(&text_layer, msg);
