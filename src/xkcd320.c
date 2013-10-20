@@ -12,6 +12,7 @@ PBL_APP_INFO(MY_UUID,
 
 Window window;
 TextLayer text_layer;
+InverterLayer inverter_layer;
 
 int ctr = 0;
 
@@ -26,6 +27,8 @@ void handle_init(AppContextRef ctx) {
   text_layer_set_font(&text_layer, fonts_get_system_font(FONT_KEY_ROBOTO_CONDENSED_21));
   layer_add_child(&window.layer, &text_layer.layer);
 
+  inverter_layer_init(&inverter_layer, GRect(0,0,144,168));
+  layer_add_child(&window.layer, &inverter_layer.layer);
 
 }
 
