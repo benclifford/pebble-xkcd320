@@ -1,7 +1,33 @@
+/* Copyright CQX Limited 2013
+ * Released under BSD 2-Clause Licence
+ */
+
 #include "pebble_os.h"
 #include "pebble_app.h"
 #include "pebble_fonts.h"
 
+/* This defines the point at which the 24h and 28h
+   clock line up. Its at midnight at the start of
+   Thursday when OFFSET is 0, because the unix
+   epoch occured at midnight at the start of a
+   Thursday.
+
+   This offset can meaningfully range up to the
+   number of seconds in a week. Ranging over a day
+   is sufficient to align the hour number as desired
+   and ranging over a week further allows the
+   day-of-week number to be aligned as desired.
+
+   The xkcd 320 comic does not define hours for
+   the 28h day - only "bed" and "non-bed".
+
+   The chosen offset makes bed time be 27:59 so
+   that you would get out of bed around 08:00
+   or 09:33 depending on your preference.
+
+*/
+
+#define OFFSET (2*3600)
 
 #define MY_UUID { 0x58, 0xC8, 0x47, 0x04, 0x3F, 0x7A, 0x47, 0x68, 0x85, 0xF2, 0x81, 0x48, 0xE0, 0x18, 0xC6, 0x01 }
 PBL_APP_INFO(MY_UUID,
@@ -50,22 +76,13 @@ void handle_init(AppContextRef ctx) {
 char big_msg[128];
 char msg[128];
 
-int offset = 0; // twiddle this for realignment with diagram
-
 void handle_tick(AppContextRef ctx, PebbleTickEvent *event) {
   time_t s;
   ctr++;
   time(&s);
 
 
-  s+= offset; 
-
-  // xkcd 320 times
-  // theres an offset, which is how the xkcd week lines up with the
-  // pebble time. this can meaningfully range from 0 to the number
-  // of seconds in a week: 604800 = 60 * 60 * 24 * 7 = 60 * 60 * 28 * 6
-  // this watch app does not provide the facility to set or
-  // adjust that offset.
+  s+= OFFSET; 
 
   int xkcd320_wn     =  (s / 60  / 60  / 28  / 6);
   int xkcd320_day    =  (s / 60  / 60  / 28) % 6;
